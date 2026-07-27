@@ -1,12 +1,30 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/mjhddev/go-ecommerce-api/configs"
+	"github.com/mjhddev/go-ecommerce-api/internal/handlers"
+	"github.com/mjhddev/go-ecommerce-api/internal/repositories"
+	"github.com/mjhddev/go-ecommerce-api/internal/services"
+)
 
 func SetupRouter() *gin.Engine {
 	router := gin.New()
 
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
+
+	// Dependency Injection
+	userRepository := repositories.NewUserRepository(configs.DB)
+	userService := services.NewUserService(userRepository)
+	authHandler := handlers.NewAuthHandler(userService)
+
+	api := router.Group("/api/v1")
+
+	auth := api.Group("/auth")
+	{
+		auth.POST("/register", authHandler.Register)
+	}
 
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
