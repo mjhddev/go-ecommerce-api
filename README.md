@@ -11,7 +11,14 @@ RESTful E-Commerce API built with Go, Gin, GORM, and PostgreSQL.
 
 ## Features
 
-- [ ] Authentication
+- [x] Gin Server
+- [x] PostgreSQL Connection
+- [x] GORM Integration
+- [x] User Model
+- [x] Auto Migration
+- [ ] User Registration
+- [ ] User Login
+- [ ] JWT Authentication
 - [ ] Category Management
 - [ ] Product Management
 - [ ] Shopping Cart
