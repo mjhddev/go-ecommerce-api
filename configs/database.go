@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/mjhddev/go-ecommerce-api/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -30,4 +31,6 @@ func ConnectDatabase() {
 	}
 
 	log.Println("Database connected successfully")
+
+	err = DB.AutoMigrate(&models.User{})
 }
