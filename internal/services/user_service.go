@@ -7,12 +7,13 @@ import (
 	"github.com/mjhddev/go-ecommerce-api/internal/errs"
 	"github.com/mjhddev/go-ecommerce-api/internal/models"
 	"github.com/mjhddev/go-ecommerce-api/internal/repositories"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/mjhddev/go-ecommerce-api/internal/utils"
 	"gorm.io/gorm"
 )
 
 type UserService interface {
 	Register(request dto.RegisterRequest) (*dto.RegisterResponse, error)
+	Login(request dto.LoginRequest) (*dto.LoginResponse, error)
 }
 
 type userService struct {
@@ -34,10 +35,7 @@ func (s *userService) Register(request dto.RegisterRequest) (*dto.RegisterRespon
 		return nil, errs.ErrEmailAlreadyExists
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword(
-		[]byte(request.Password),
-		bcrypt.DefaultCost,
-	)
+	hashedPassword, err := utils.HashPassword(request.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +43,7 @@ func (s *userService) Register(request dto.RegisterRequest) (*dto.RegisterRespon
 	user := &models.User{
 		Name:     request.Name,
 		Email:    request.Email,
-		Password: string(hashedPassword),
+		Password: hashedPassword,
 	}
 
 	if err := s.repo.Create(user); err != nil {
@@ -60,4 +58,27 @@ func (s *userService) Register(request dto.RegisterRequest) (*dto.RegisterRespon
 	}
 
 	return response, nil
+}
+
+func (s *userService) Login(request dto.LoginRequest) (*dto.LoginResponse, error) {
+	user, err := s.repo.GetByEmail(request.Email)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, errs.ErrInvalidCredentials
+	}
+
+	if err := utils.CheckPassword(user.Password, request.Password); err != nil {
+		return nil, errs.ErrInvalidCredentials
+	}
+
+	token, err := utils.GenerateToken(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.LoginResponse{
+		AccessToken: token,
+	}, nil
 }

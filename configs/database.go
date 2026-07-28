@@ -10,9 +10,13 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var (
+	DB        *gorm.DB
+	JWTSecret string
+)
 
 func ConnectDatabase() {
+	JWTSecret = os.Getenv("JWT_SECRET")
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		os.Getenv("DB_HOST"),

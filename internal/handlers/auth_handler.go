@@ -47,3 +47,23 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		user,
 	)
 }
+
+func (h *AuthHandler) Login(c *gin.Context) {
+	var request dto.LoginRequest
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		response.Error(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	loginResponse, err := h.userService.Login(request)
+	if err != nil {
+		if errors.Is(err, errs.ErrInvalidCredentials) {
+			response.Error(c, http.StatusUnauthorized, err.Error())
+			return
+		}
+
+		response.Error(c, http.StatusInternalServerError, "internal server error")
+		return
+	}
+	response.Success(c, http.StatusOK, "Login successful", loginResponse)
+}
