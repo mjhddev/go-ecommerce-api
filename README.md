@@ -1,6 +1,6 @@
 # Go E-Commerce API
 
-RESTful E-Commerce API built with Go, Gin, GORM, and PostgreSQL.
+A RESTful API for an e-commerce application built with Go, Gin, GORM, PostgreSQL, and JWT Authentication.
 
 ## Tech Stack
 
@@ -8,6 +8,9 @@ RESTful E-Commerce API built with Go, Gin, GORM, and PostgreSQL.
 - Gin
 - GORM
 - PostgreSQL
+- JWT
+- bcrypt
+- godotenv
 
 ## Features
 
@@ -17,11 +20,23 @@ RESTful E-Commerce API built with Go, Gin, GORM, and PostgreSQL.
 - [x] User Model
 - [x] Auto Migration
 - [x] User Registration
-- [ ] User Login
-- [ ] JWT Authentication
+- [x] User Login
+- [x] JWT Authentication
+- [ ] JWT Authorization Middleware
+- [ ] User Profile
 - [ ] Category Management
 - [ ] Product Management
 - [ ] Shopping Cart
 - [ ] Checkout
 - [ ] Swagger Documentation
 - [ ] Docker Support
+
+## Run Project
+
+```bash
+go mod tidy
+```
+
+```bash
+go run ./cmd/api
+```
