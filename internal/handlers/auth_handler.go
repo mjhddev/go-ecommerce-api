@@ -67,3 +67,19 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	}
 	response.Success(c, http.StatusOK, "Login successful", loginResponse)
 }
+
+func (h *AuthHandler) Profile(c *gin.Context) {
+	userID := c.GetUint("userID")
+	profile, err := h.userService.Profile(userID)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.Success(
+		c,
+		http.StatusOK,
+		"Profile retrieved successfully",
+		profile,
+	)
+}

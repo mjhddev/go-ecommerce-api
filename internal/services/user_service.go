@@ -14,6 +14,7 @@ import (
 type UserService interface {
 	Register(request dto.RegisterRequest) (*dto.RegisterResponse, error)
 	Login(request dto.LoginRequest) (*dto.LoginResponse, error)
+	Profile(userID uint) (*dto.ProfileResponse, error)
 }
 
 type userService struct {
@@ -80,5 +81,22 @@ func (s *userService) Login(request dto.LoginRequest) (*dto.LoginResponse, error
 
 	return &dto.LoginResponse{
 		AccessToken: token,
+	}, nil
+}
+func (s *userService) Profile(userID uint) (*dto.ProfileResponse, error) {
+	user, err := s.repo.GetByID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		return nil, errs.ErrUserNotFound
+	}
+
+	return &dto.ProfileResponse{
+		ID:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
+		Role:  user.Role,
 	}, nil
 }

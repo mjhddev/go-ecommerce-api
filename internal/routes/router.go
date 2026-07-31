@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mjhddev/go-ecommerce-api/configs"
 	"github.com/mjhddev/go-ecommerce-api/internal/handlers"
+	"github.com/mjhddev/go-ecommerce-api/internal/middleware"
 	"github.com/mjhddev/go-ecommerce-api/internal/repositories"
 	"github.com/mjhddev/go-ecommerce-api/internal/services"
 )
@@ -20,6 +21,12 @@ func SetupRouter() *gin.Engine {
 	authHandler := handlers.NewAuthHandler(userService)
 
 	api := router.Group("/api/v1")
+
+	profile := api.Group("/profile")
+	profile.Use(middleware.AuthMiddleware())
+	{
+		profile.GET("", authHandler.Profile)
+	}
 
 	auth := api.Group("/auth")
 	{
