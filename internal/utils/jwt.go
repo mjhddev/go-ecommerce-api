@@ -24,7 +24,6 @@ func GenerateToken(user *models.User) (string, error) {
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
-
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(configs.JWTSecret))
 	if err != nil {

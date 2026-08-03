@@ -43,11 +43,12 @@ func SetupRouter() *gin.Engine {
 	category := api.Group("/categories")
 	category.Use(middleware.AuthMiddleware())
 	{
-		category.POST("", categoryHandler.Create)
 		category.GET("", categoryHandler.GetAll)
 		category.GET("/:id", categoryHandler.GetByID)
-		category.PUT("/:id", categoryHandler.Update)
-		category.DELETE("/:id", categoryHandler.Delete)
+
+		category.POST("", middleware.RoleMiddleware("admin"), categoryHandler.Create)
+		category.PUT("/:id", middleware.RoleMiddleware("admin"), categoryHandler.Update)
+		category.DELETE("/:id", middleware.RoleMiddleware("admin"), categoryHandler.Delete)
 	}
 
 	router.GET("/health", func(c *gin.Context) {
