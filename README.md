@@ -24,7 +24,8 @@ A RESTful API for an e-commerce application built with Go, Gin, GORM, PostgreSQL
 - [x] JWT Authentication
 - [x] JWT Authorization Middleware
 - [x] User Profile
-- [ ] Category Management
+- [x] Category Management (CRUD)
+- [x] Role-Based Authorization (Admin & User)
 - [ ] Product Management
 - [ ] Shopping Cart
 - [ ] Checkout
