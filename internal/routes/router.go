@@ -20,6 +20,12 @@ func SetupRouter() *gin.Engine {
 	userService := services.NewUserService(userRepository)
 	authHandler := handlers.NewAuthHandler(userService)
 
+	categoryRepository := repositories.NewCategoryRepository(configs.DB)
+	categoryService := services.NewCategoryService(categoryRepository)
+	categoryHandler := handlers.NewCategoryHandler(categoryService)
+
+	// Routes
+
 	api := router.Group("/api/v1")
 
 	profile := api.Group("/profile")
@@ -32,6 +38,12 @@ func SetupRouter() *gin.Engine {
 	{
 		auth.POST("/register", authHandler.Register)
 		auth.POST("/login", authHandler.Login)
+	}
+
+	category := api.Group("/categories")
+	category.Use(middleware.AuthMiddleware())
+	{
+		category.POST("", categoryHandler.Create)
 	}
 
 	router.GET("/health", func(c *gin.Context) {
