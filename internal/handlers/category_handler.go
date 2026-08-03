@@ -84,3 +84,61 @@ func (h *CategoryHandler) GetByID(c *gin.Context) {
 		category,
 	)
 }
+
+func (h *CategoryHandler) Update(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid category ID")
+		return
+	}
+
+	var request dto.UpdateCategoryRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		response.Error(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	category, err := h.categoryService.Update(uint(id), request)
+	if err != nil {
+		if errors.Is(err, errs.ErrCategoryNotFound) {
+			response.Error(c, http.StatusNotFound, err.Error())
+		} else {
+			response.Error(c, http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+
+	response.Success(
+		c,
+		http.StatusOK,
+		"Category updated successfully",
+		category,
+	)
+}
+
+func (h *CategoryHandler) Delete(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid category ID")
+		return
+	}
+
+	err = h.categoryService.Delete(uint(id))
+	if err != nil {
+		if errors.Is(err, errs.ErrCategoryNotFound) {
+			response.Error(c, http.StatusNotFound, err.Error())
+		} else {
+			response.Error(c, http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+
+	response.Success(
+		c,
+		http.StatusOK,
+		"Category deleted successfully",
+		nil,
+	)
+}
