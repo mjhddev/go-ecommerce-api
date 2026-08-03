@@ -8,6 +8,7 @@ import (
 
 type CategoryService interface {
 	Create(request dto.CreateCategoryRequest) (*dto.CategoryResponse, error)
+	GetAll() ([]dto.CategoryResponse, error)
 }
 
 type categoryService struct {
@@ -33,6 +34,23 @@ func (s *categoryService) Create(request dto.CreateCategoryRequest) (*dto.Catego
 	response := &dto.CategoryResponse{
 		ID:   category.ID,
 		Name: category.Name,
+	}
+
+	return response, nil
+}
+
+func (s *categoryService) GetAll() ([]dto.CategoryResponse, error) {
+	categories, err := s.repo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	response := make([]dto.CategoryResponse, 0, len(categories))
+	for _, category := range categories {
+		response = append(response, dto.CategoryResponse{
+			ID:   category.ID,
+			Name: category.Name,
+		})
 	}
 
 	return response, nil
