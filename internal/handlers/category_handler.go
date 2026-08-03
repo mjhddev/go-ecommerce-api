@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mjhddev/go-ecommerce-api/internal/dto"
+	"github.com/mjhddev/go-ecommerce-api/internal/errs"
 	"github.com/mjhddev/go-ecommerce-api/internal/response"
 	"github.com/mjhddev/go-ecommerce-api/internal/services"
 )
@@ -53,5 +56,31 @@ func (h *CategoryHandler) GetAll(c *gin.Context) {
 		http.StatusOK,
 		"Categories retrieved successfully",
 		categories,
+	)
+}
+
+func (h *CategoryHandler) GetByID(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid category ID")
+		return
+	}
+
+	category, err := h.categoryService.GetByID(uint(id))
+	if err != nil {
+		if errors.Is(err, errs.ErrCategoryNotFound) {
+			response.Error(c, http.StatusNotFound, err.Error())
+		} else {
+			response.Error(c, http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+
+	response.Success(
+		c,
+		http.StatusOK,
+		"Category retrieved successfully",
+		category,
 	)
 }

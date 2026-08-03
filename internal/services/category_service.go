@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/mjhddev/go-ecommerce-api/internal/dto"
+	"github.com/mjhddev/go-ecommerce-api/internal/errs"
 	"github.com/mjhddev/go-ecommerce-api/internal/models"
 	"github.com/mjhddev/go-ecommerce-api/internal/repositories"
 )
@@ -9,6 +10,7 @@ import (
 type CategoryService interface {
 	Create(request dto.CreateCategoryRequest) (*dto.CategoryResponse, error)
 	GetAll() ([]dto.CategoryResponse, error)
+	GetByID(id uint) (*dto.CategoryResponse, error)
 }
 
 type categoryService struct {
@@ -51,6 +53,24 @@ func (s *categoryService) GetAll() ([]dto.CategoryResponse, error) {
 			ID:   category.ID,
 			Name: category.Name,
 		})
+	}
+
+	return response, nil
+}
+
+func (s *categoryService) GetByID(id uint) (*dto.CategoryResponse, error) {
+	category, err := s.repo.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if category == nil {
+		return nil, errs.ErrCategoryNotFound
+	}
+
+	response := &dto.CategoryResponse{
+		ID:   category.ID,
+		Name: category.Name,
 	}
 
 	return response, nil

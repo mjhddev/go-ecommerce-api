@@ -45,6 +45,7 @@ func SetupRouter() *gin.Engine {
 	{
 		category.POST("", categoryHandler.Create)
 		category.GET("", categoryHandler.GetAll)
+		category.GET("/:id", categoryHandler.GetByID)
 	}
 
 	router.GET("/health", func(c *gin.Context) {
