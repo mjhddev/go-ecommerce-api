@@ -7,4 +7,5 @@ var (
 	ErrInvalidCredentials = errors.New("invalid email or password")
 	ErrUserNotFound       = errors.New("user not found")
 	ErrCategoryNotFound   = errors.New("category not found")
+	ErrProductNotFound    = errors.New("product not found")
 )
