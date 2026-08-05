@@ -28,6 +28,10 @@ func SetupRouter() *gin.Engine {
 	productService := services.NewProductService(productRepository, categoryRepository)
 	productHandler := handlers.NewProductHandler(productService)
 
+	cartRepository := repositories.NewCartRepository(configs.DB)
+	cartService := services.NewCartService(cartRepository, productRepository)
+	cartHandler := handlers.NewCartHandler(cartService)
+
 	// Routes
 	api := router.Group("/api/v1")
 
@@ -63,6 +67,15 @@ func SetupRouter() *gin.Engine {
 		product.POST("", middleware.RoleMiddleware("admin"), productHandler.Create)
 		product.PUT("/:id", middleware.RoleMiddleware("admin"), productHandler.Update)
 		product.DELETE("/:id", middleware.RoleMiddleware("admin"), productHandler.Delete)
+	}
+
+	cart := api.Group("/cart")
+	cart.Use(middleware.AuthMiddleware())
+	{
+		cart.POST("", cartHandler.AddToCart)
+		cart.GET("", cartHandler.GetCart)
+		cart.PUT("/:id", cartHandler.Update)
+		cart.DELETE("/:id", cartHandler.Delete)
 	}
 
 	router.GET("/health", func(c *gin.Context) {

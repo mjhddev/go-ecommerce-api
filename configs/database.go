@@ -40,6 +40,7 @@ func ConnectDatabase() {
 		&models.User{},
 		&models.Category{},
 		&models.Product{},
+		&models.CartItem{},
 	); err != nil {
 		log.Fatal("Failed to migrate database: ", err)
 	}

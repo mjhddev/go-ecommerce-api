@@ -12,6 +12,8 @@ type Product struct {
 	CategoryID uint     `json:"category_id"`
 	Category   Category `gorm:"foreignKey:CategoryID" json:"category"`
 
+	CartItems []CartItem `gorm:"foreignKey:ProductID" json:"cart_items,omitempty"`
+
 	CreateAt time.Time `json:"create_at"`
 	UpdateAt time.Time `json:"update_at"`
 }
