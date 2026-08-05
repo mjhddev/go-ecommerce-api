@@ -27,7 +27,7 @@ A RESTful API for an e-commerce application built with Go, Gin, GORM, PostgreSQL
 - [x] Category Management (CRUD)
 - [x] Role-Based Authorization (Admin & User)
 - [x] Product Management
-- [ ] Shopping Cart
+- [x] Shopping Cart
 - [ ] Checkout
 - [ ] Swagger Documentation
 - [ ] Docker Support
