@@ -91,6 +91,8 @@ func SetupRouter() *gin.Engine {
 	order := api.Group("/orders")
 	order.Use(middleware.AuthMiddleware())
 	{
+		order.GET("", orderHandler.GetOrders)
+		order.GET("/:id", orderHandler.GetOrderByID)
 		order.POST("/checkout", orderHandler.Checkout)
 	}
 

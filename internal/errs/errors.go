@@ -12,4 +12,5 @@ var (
 	ErrForbidden          = errors.New("forbidden")
 	ErrCartEmpty          = errors.New("cart is empty")
 	ErrInsufficientStock  = errors.New("insufficient stock")
+	ErrOrderNotFound      = errors.New("order not found")
 )

@@ -5,3 +5,27 @@ type CheckoutResponse struct {
 	TotalAmount float64 `json:"total_amount"`
 	Status      string  `json:"status"`
 }
+
+type OrderResponse struct {
+	ID          uint    `json:"id"`
+	TotalAmount float64 `json:"total_amount"`
+	Status      string  `json:"status"`
+}
+
+type OrderItemResponse struct {
+	Product  OrderProductResponse `json:"product"`
+	Quantity int                  `json:"quantity"`
+	Price    float64              `json:"price"`
+}
+
+type OrderProductResponse struct {
+	ID   uint   `json:"id"`
+	Name string `json:"name"`
+}
+
+type OrderDetailResponse struct {
+	ID          uint                `json:"id"`
+	TotalAmount float64             `json:"total_amount"`
+	Status      string              `json:"status"`
+	Items       []OrderItemResponse `json:"items"`
+}
