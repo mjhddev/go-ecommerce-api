@@ -10,6 +10,7 @@ type User struct {
 	Role     string `gorm:"size:20;default:user" json:"role"`
 
 	CartItems []CartItem `gorm:"foreignKey:UserID" json:"cart_items,omitempty"`
+	Orders    []Order    `gorm:"foreignKey:UserID" json:"orders,omitempty"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

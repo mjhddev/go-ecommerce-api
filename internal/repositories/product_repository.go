@@ -13,6 +13,7 @@ type ProductRepository interface {
 	GetByID(id uint) (*models.Product, error)
 	Update(product *models.Product) error
 	Delete(id uint) error
+	UpdateTx(tx *gorm.DB, product *models.Product) error
 }
 
 type productRepository struct {
@@ -54,4 +55,8 @@ func (r *productRepository) Update(product *models.Product) error {
 
 func (r *productRepository) Delete(id uint) error {
 	return r.db.Delete(&models.Product{}, id).Error
+}
+
+func (r *productRepository) UpdateTx(tx *gorm.DB, product *models.Product) error {
+	return tx.Save(product).Error
 }

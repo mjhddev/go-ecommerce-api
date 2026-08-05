@@ -14,6 +14,7 @@ type CartRepository interface {
 	GetByUser(userID uint) ([]models.CartItem, error)
 	GetByID(id uint) (*models.CartItem, error)
 	Delete(id uint) error
+	DeleteByUser(tx *gorm.DB, userID uint) error
 }
 
 type cartRepository struct {
@@ -72,4 +73,8 @@ func (r *cartRepository) GetByID(id uint) (*models.CartItem, error) {
 
 func (r *cartRepository) Delete(id uint) error {
 	return r.db.Delete(&models.CartItem{}, id).Error
+}
+
+func (r *cartRepository) DeleteByUser(tx *gorm.DB, userID uint) error {
+	return tx.Where("user_id = ?", userID).Delete(&models.CartItem{}).Error
 }
