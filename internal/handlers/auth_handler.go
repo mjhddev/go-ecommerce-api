@@ -21,6 +21,18 @@ func NewAuthHandler(userService services.UserService) *AuthHandler {
 	}
 }
 
+// Register godoc
+//
+//	@Summary		Register a new user
+//	@Description	Register a new user account
+//	@Tags			Authentication
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		dto.RegisterRequest	true	"Register Request"
+//	@Success		201		{object}	response.SuccessResponse
+//	@Failure		400		{object}	response.ErrorResponse
+//	@Failure		409		{object}	response.ErrorResponse
+//	@Router			/auth/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
 	var request dto.RegisterRequest
 
@@ -48,6 +60,18 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	)
 }
 
+// Login godoc
+//
+//	@Summary		Login user
+//	@Description	Authenticate user and return JWT token
+//	@Tags			Authentication
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		dto.LoginRequest	true	"Login Request"
+//	@Success		200		{object}	response.SuccessResponse
+//	@Failure		400		{object}	response.ErrorResponse
+//	@Failure		401		{object}	response.ErrorResponse
+//	@Router			/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	var request dto.LoginRequest
 
@@ -68,6 +92,16 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	response.Success(c, http.StatusOK, "Login successful", loginResponse)
 }
 
+// Profile godoc
+//
+//	@Summary		Get user profile
+//	@Description	Get authenticated user profile
+//	@Tags			User
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		401	{object}	response.ErrorResponse
+//	@Router			/profile [get]
 func (h *AuthHandler) Profile(c *gin.Context) {
 	userID := c.GetUint("userID")
 	profile, err := h.userService.Profile(userID)

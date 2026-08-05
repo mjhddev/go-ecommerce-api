@@ -22,6 +22,20 @@ func NewCartHandler(cartService services.CartService) *CartHandler {
 	}
 }
 
+// AddToCart godoc
+//
+//	@Summary		Add product to cart
+//	@Description	Add a product to the authenticated user's cart
+//	@Tags			Cart
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			request	body		dto.AddToCartRequest	true	"Cart Request"
+//	@Success		201		{object}	response.SuccessResponse
+//	@Failure		400		{object}	response.ErrorResponse
+//	@Failure		401		{object}	response.ErrorResponse
+//	@Failure		404		{object}	response.ErrorResponse
+//	@Router			/cart [post]
 func (h *CartHandler) AddToCart(c *gin.Context) {
 	var request dto.AddToCartRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -59,6 +73,16 @@ func (h *CartHandler) AddToCart(c *gin.Context) {
 
 }
 
+// GetCart godoc
+//
+//	@Summary		Get cart
+//	@Description	Get all cart items for the authenticated user
+//	@Tags			Cart
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		401	{object}	response.ErrorResponse
+//	@Router			/cart [get]
 func (h *CartHandler) GetCart(c *gin.Context) {
 	userIDValue, exists := c.Get("userID")
 	if !exists {
@@ -85,6 +109,21 @@ func (h *CartHandler) GetCart(c *gin.Context) {
 	)
 }
 
+// UpdateCart godoc
+//
+//	@Summary		Update cart item
+//	@Description	Update quantity of a cart item
+//	@Tags			Cart
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id		path		int					true	"Cart Item ID"
+//	@Param			request	body		dto.UpdateCartRequest	true	"Update Cart Request"
+//	@Success		200		{object}	response.SuccessResponse
+//	@Failure		400		{object}	response.ErrorResponse
+//	@Failure		401		{object}	response.ErrorResponse
+//	@Failure		404		{object}	response.ErrorResponse
+//	@Router			/cart/{id} [put]
 func (h *CartHandler) Update(c *gin.Context) {
 	id := c.Param("id")
 
@@ -124,6 +163,19 @@ func (h *CartHandler) Update(c *gin.Context) {
 	)
 }
 
+// DeleteCartItem godoc
+//
+//	@Summary		Delete cart item
+//	@Description	Remove a cart item
+//	@Tags			Cart
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id	path		int	true	"Cart Item ID"
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		400	{object}	response.ErrorResponse
+//	@Failure		401	{object}	response.ErrorResponse
+//	@Failure		404	{object}	response.ErrorResponse
+//	@Router			/cart/{id} [delete]
 func (h *CartHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
 

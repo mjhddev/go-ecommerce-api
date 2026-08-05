@@ -1,12 +1,18 @@
 package routes
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/mjhddev/go-ecommerce-api/configs"
 	"github.com/mjhddev/go-ecommerce-api/internal/handlers"
 	"github.com/mjhddev/go-ecommerce-api/internal/middleware"
 	"github.com/mjhddev/go-ecommerce-api/internal/repositories"
+	"github.com/mjhddev/go-ecommerce-api/internal/response"
 	"github.com/mjhddev/go-ecommerce-api/internal/services"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func SetupRouter() *gin.Engine {
@@ -14,6 +20,8 @@ func SetupRouter() *gin.Engine {
 
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Dependency Injection
 	userRepository := repositories.NewUserRepository(configs.DB)
@@ -97,10 +105,12 @@ func SetupRouter() *gin.Engine {
 	}
 
 	router.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"status":  "success",
-			"message": "API is running",
-		})
+		response.Success(
+			c,
+			http.StatusOK,
+			"API is running",
+			nil,
+		)
 	})
 
 	return router

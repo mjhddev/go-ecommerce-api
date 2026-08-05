@@ -22,6 +22,20 @@ func NewCategoryHandler(categoryService services.CategoryService) *CategoryHandl
 	}
 }
 
+// CreateCategory godoc
+//
+//	@Summary		Create category
+//	@Description	Create a new category
+//	@Tags			Categories
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			request	body		dto.CreateCategoryRequest	true	"Category Request"
+//	@Success		201		{object}	response.SuccessResponse
+//	@Failure		400		{object}	response.ErrorResponse
+//	@Failure		401		{object}	response.ErrorResponse
+//	@Failure		403		{object}	response.ErrorResponse
+//	@Router			/categories [post]
 func (h *CategoryHandler) Create(c *gin.Context) {
 	var request dto.CreateCategoryRequest
 
@@ -44,6 +58,16 @@ func (h *CategoryHandler) Create(c *gin.Context) {
 	)
 }
 
+// GetCategories godoc
+//
+//	@Summary		Get all categories
+//	@Description	Get all categories
+//	@Tags			Categories
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		401	{object}	response.ErrorResponse
+//	@Router			/categories [get]
 func (h *CategoryHandler) GetAll(c *gin.Context) {
 	categories, err := h.categoryService.GetAll()
 	if err != nil {
@@ -59,6 +83,18 @@ func (h *CategoryHandler) GetAll(c *gin.Context) {
 	)
 }
 
+// GetCategoryByID godoc
+//
+//	@Summary		Get category by ID
+//	@Description	Get category by ID
+//	@Tags			Categories
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id	path		int	true	"Category ID"
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		400	{object}	response.ErrorResponse
+//	@Failure		404	{object}	response.ErrorResponse
+//	@Router			/categories/{id} [get]
 func (h *CategoryHandler) GetByID(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
@@ -85,6 +121,22 @@ func (h *CategoryHandler) GetByID(c *gin.Context) {
 	)
 }
 
+// UpdateCategory godoc
+//
+//	@Summary		Update category
+//	@Description	Update category by ID
+//	@Tags			Categories
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id		path		int					true	"Category ID"
+//	@Param			request	body		dto.UpdateCategoryRequest	true	"Category Request"
+//	@Success		200		{object}	response.SuccessResponse
+//	@Failure		400		{object}	response.ErrorResponse
+//	@Failure		401		{object}	response.ErrorResponse
+//	@Failure		403		{object}	response.ErrorResponse
+//	@Failure		404		{object}	response.ErrorResponse
+//	@Router			/categories/{id} [put]
 func (h *CategoryHandler) Update(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
@@ -117,6 +169,20 @@ func (h *CategoryHandler) Update(c *gin.Context) {
 	)
 }
 
+// DeleteCategory godoc
+//
+//	@Summary		Delete category
+//	@Description	Delete category by ID
+//	@Tags			Categories
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id	path		int	true	"Category ID"
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		400	{object}	response.ErrorResponse
+//	@Failure		401	{object}	response.ErrorResponse
+//	@Failure		403	{object}	response.ErrorResponse
+//	@Failure		404	{object}	response.ErrorResponse
+//	@Router			/categories/{id} [delete]
 func (h *CategoryHandler) Delete(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)

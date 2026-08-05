@@ -21,6 +21,18 @@ func NewOrderHandler(orderService services.OrderService) *OrderHandler {
 	}
 }
 
+// Checkout godoc
+//
+//	@Summary		Checkout cart
+//	@Description	Create an order from the authenticated user's cart
+//	@Tags			Orders
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		201	{object}	response.SuccessResponse
+//	@Failure		400	{object}	response.ErrorResponse
+//	@Failure		401	{object}	response.ErrorResponse
+//	@Failure		404	{object}	response.ErrorResponse
+//	@Router			/orders/checkout [post]
 func (h *OrderHandler) Checkout(c *gin.Context) {
 	userIDValue, exists := c.Get("userID")
 	if !exists {
@@ -59,6 +71,16 @@ func (h *OrderHandler) Checkout(c *gin.Context) {
 	)
 }
 
+// GetOrders godoc
+//
+//	@Summary		Get order history
+//	@Description	Get all orders of the authenticated user
+//	@Tags			Orders
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		401	{object}	response.ErrorResponse
+//	@Router			/orders [get]
 func (h *OrderHandler) GetOrders(c *gin.Context) {
 
 	userIDValue, exists := c.Get("userID")
@@ -87,6 +109,20 @@ func (h *OrderHandler) GetOrders(c *gin.Context) {
 	)
 }
 
+// GetOrderByID godoc
+//
+//	@Summary		Get order detail
+//	@Description	Get order detail by ID
+//	@Tags			Orders
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id	path		int	true	"Order ID"
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		400	{object}	response.ErrorResponse
+//	@Failure		401	{object}	response.ErrorResponse
+//	@Failure		403	{object}	response.ErrorResponse
+//	@Failure		404	{object}	response.ErrorResponse
+//	@Router			/orders/{id} [get]
 func (h *OrderHandler) GetOrderByID(c *gin.Context) {
 
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)

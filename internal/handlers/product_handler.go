@@ -22,6 +22,21 @@ func NewProductHandler(productService services.ProductService) *ProductHandler {
 	}
 }
 
+// CreateProduct godoc
+//
+//	@Summary		Create product
+//	@Description	Create a new product
+//	@Tags			Products
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			request	body		dto.CreateProductRequest	true	"Product Request"
+//	@Success		201		{object}	response.SuccessResponse
+//	@Failure		400		{object}	response.ErrorResponse
+//	@Failure		401		{object}	response.ErrorResponse
+//	@Failure		403		{object}	response.ErrorResponse
+//	@Failure		404		{object}	response.ErrorResponse
+//	@Router			/products [post]
 func (h *ProductHandler) Create(c *gin.Context) {
 	var request dto.CreateProductRequest
 
@@ -49,6 +64,16 @@ func (h *ProductHandler) Create(c *gin.Context) {
 	)
 }
 
+// GetProducts godoc
+//
+//	@Summary		Get all products
+//	@Description	Get all products
+//	@Tags			Products
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		401	{object}	response.ErrorResponse
+//	@Router			/products [get]
 func (h *ProductHandler) GetAll(c *gin.Context) {
 	products, err := h.productService.GetAll()
 	if err != nil {
@@ -64,6 +89,18 @@ func (h *ProductHandler) GetAll(c *gin.Context) {
 	)
 }
 
+// GetProductByID godoc
+//
+//	@Summary		Get product by ID
+//	@Description	Get product by ID
+//	@Tags			Products
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id	path		int	true	"Product ID"
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		400	{object}	response.ErrorResponse
+//	@Failure		404	{object}	response.ErrorResponse
+//	@Router			/products/{id} [get]
 func (h *ProductHandler) GetByID(c *gin.Context) {
 	idParam := c.Param("id")
 
@@ -92,6 +129,22 @@ func (h *ProductHandler) GetByID(c *gin.Context) {
 	)
 }
 
+// UpdateProduct godoc
+//
+//	@Summary		Update product
+//	@Description	Update product by ID
+//	@Tags			Products
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id		path		int					true	"Product ID"
+//	@Param			request	body		dto.UpdateProductRequest	true	"Product Request"
+//	@Success		200		{object}	response.SuccessResponse
+//	@Failure		400		{object}	response.ErrorResponse
+//	@Failure		401		{object}	response.ErrorResponse
+//	@Failure		403		{object}	response.ErrorResponse
+//	@Failure		404		{object}	response.ErrorResponse
+//	@Router			/products/{id} [put]
 func (h *ProductHandler) Update(c *gin.Context) {
 	idParam := c.Param("id")
 
@@ -127,6 +180,20 @@ func (h *ProductHandler) Update(c *gin.Context) {
 	)
 }
 
+// DeleteProduct godoc
+//
+//	@Summary		Delete product
+//	@Description	Delete product by ID
+//	@Tags			Products
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id	path		int	true	"Product ID"
+//	@Success		200	{object}	response.SuccessResponse
+//	@Failure		400	{object}	response.ErrorResponse
+//	@Failure		401	{object}	response.ErrorResponse
+//	@Failure		403	{object}	response.ErrorResponse
+//	@Failure		404	{object}	response.ErrorResponse
+//	@Router			/products/{id} [delete]
 func (h *ProductHandler) Delete(c *gin.Context) {
 	idParam := c.Param("id")
 
