@@ -83,6 +83,7 @@ func (s *userService) Login(request dto.LoginRequest) (*dto.LoginResponse, error
 		AccessToken: token,
 	}, nil
 }
+
 func (s *userService) Profile(userID uint) (*dto.ProfileResponse, error) {
 	user, err := s.repo.GetByID(userID)
 	if err != nil {
