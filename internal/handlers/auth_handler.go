@@ -29,7 +29,7 @@ func NewAuthHandler(userService services.UserService) *AuthHandler {
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		dto.RegisterRequest	true	"Register Request"
-//	@Success		201		{object}	response.SuccessResponse
+//	@Success		201		{object}	response.SuccessResponse{data=dto.RegisterResponse}
 //	@Failure		400		{object}	response.ErrorResponse
 //	@Failure		409		{object}	response.ErrorResponse
 //	@Router			/auth/register [post]
@@ -68,7 +68,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		dto.LoginRequest	true	"Login Request"
-//	@Success		200		{object}	response.SuccessResponse
+//	@Success		200		{object}	response.SuccessResponse{data=dto.LoginResponse}
 //	@Failure		400		{object}	response.ErrorResponse
 //	@Failure		401		{object}	response.ErrorResponse
 //	@Router			/auth/login [post]
@@ -99,7 +99,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 //	@Tags			User
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	response.SuccessResponse
+//	@Success		200	{object}	response.SuccessResponse{data=dto.ProfileResponse}
 //	@Failure		401	{object}	response.ErrorResponse
 //	@Router			/profile [get]
 func (h *AuthHandler) Profile(c *gin.Context) {

@@ -31,7 +31,7 @@ func NewProductHandler(productService services.ProductService) *ProductHandler {
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Param			request	body		dto.CreateProductRequest	true	"Product Request"
-//	@Success		201		{object}	response.SuccessResponse
+//	@Success		201		{object}	response.SuccessResponse{data=dto.ProductResponse}
 //	@Failure		400		{object}	response.ErrorResponse
 //	@Failure		401		{object}	response.ErrorResponse
 //	@Failure		403		{object}	response.ErrorResponse
@@ -71,7 +71,7 @@ func (h *ProductHandler) Create(c *gin.Context) {
 //	@Tags			Products
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	response.SuccessResponse
+//	@Success		200	{object}	response.SuccessResponse{data=[]dto.ProductResponse}
 //	@Failure		401	{object}	response.ErrorResponse
 //	@Router			/products [get]
 func (h *ProductHandler) GetAll(c *gin.Context) {
@@ -97,7 +97,7 @@ func (h *ProductHandler) GetAll(c *gin.Context) {
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Param			id	path		int	true	"Product ID"
-//	@Success		200	{object}	response.SuccessResponse
+//	@Success		200	{object}	response.SuccessResponse{data=dto.ProductResponse}
 //	@Failure		400	{object}	response.ErrorResponse
 //	@Failure		404	{object}	response.ErrorResponse
 //	@Router			/products/{id} [get]
@@ -139,7 +139,7 @@ func (h *ProductHandler) GetByID(c *gin.Context) {
 //	@Security		BearerAuth
 //	@Param			id		path		int					true	"Product ID"
 //	@Param			request	body		dto.UpdateProductRequest	true	"Product Request"
-//	@Success		200		{object}	response.SuccessResponse
+//	@Success		200		{object}	response.SuccessResponse{data=dto.ProductResponse}
 //	@Failure		400		{object}	response.ErrorResponse
 //	@Failure		401		{object}	response.ErrorResponse
 //	@Failure		403		{object}	response.ErrorResponse

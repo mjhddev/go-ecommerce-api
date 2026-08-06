@@ -10,6 +10,31 @@ definitions:
     - product_id
     - quantity
     type: object
+  dto.CartItemResponse:
+    properties:
+      id:
+        type: integer
+      product:
+        $ref: '#/definitions/dto.ProductResponse'
+      quantity:
+        type: integer
+    type: object
+  dto.CategoryResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.CheckoutResponse:
+    properties:
+      order_id:
+        type: integer
+      status:
+        type: string
+      total_amount:
+        type: number
+    type: object
   dto.CreateCategoryRequest:
     properties:
       name:
@@ -46,6 +71,75 @@ definitions:
     - email
     - password
     type: object
+  dto.LoginResponse:
+    properties:
+      access_token:
+        type: string
+    type: object
+  dto.OrderDetailResponse:
+    properties:
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/dto.OrderItemResponse'
+        type: array
+      status:
+        type: string
+      total_amount:
+        type: number
+    type: object
+  dto.OrderItemResponse:
+    properties:
+      price:
+        type: number
+      product:
+        $ref: '#/definitions/dto.OrderProductResponse'
+      quantity:
+        type: integer
+    type: object
+  dto.OrderProductResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.OrderResponse:
+    properties:
+      id:
+        type: integer
+      status:
+        type: string
+      total_amount:
+        type: number
+    type: object
+  dto.ProductResponse:
+    properties:
+      category:
+        $ref: '#/definitions/dto.CategoryResponse'
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      stock:
+        type: integer
+    type: object
+  dto.ProfileResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      role:
+        type: string
+    type: object
   dto.RegisterRequest:
     properties:
       email:
@@ -61,6 +155,17 @@ definitions:
     - email
     - name
     - password
+    type: object
+  dto.RegisterResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      role:
+        type: string
     type: object
   dto.UpdateCartRequest:
     properties:
@@ -140,7 +245,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.LoginResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -170,7 +280,12 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.RegisterResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -191,7 +306,14 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.CartItemResponse'
+                  type: array
+              type: object
         "401":
           description: Unauthorized
           schema:
@@ -218,7 +340,12 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CartItemResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -291,7 +418,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CartItemResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -318,7 +450,14 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.CategoryResponse'
+                  type: array
+              type: object
         "401":
           description: Unauthorized
           schema:
@@ -345,7 +484,12 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CategoryResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -414,7 +558,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CategoryResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -450,7 +599,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CategoryResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -481,7 +635,14 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.OrderResponse'
+                  type: array
+              type: object
         "401":
           description: Unauthorized
           schema:
@@ -506,7 +667,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.OrderDetailResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -537,7 +703,12 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CheckoutResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -564,7 +735,14 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.ProductResponse'
+                  type: array
+              type: object
         "401":
           description: Unauthorized
           schema:
@@ -591,7 +769,12 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ProductResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -664,7 +847,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ProductResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -700,7 +888,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ProductResponse'
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -731,7 +924,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.SuccessResponse'
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ProfileResponse'
+              type: object
         "401":
           description: Unauthorized
           schema:

@@ -31,7 +31,7 @@ func NewCategoryHandler(categoryService services.CategoryService) *CategoryHandl
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Param			request	body		dto.CreateCategoryRequest	true	"Category Request"
-//	@Success		201		{object}	response.SuccessResponse
+//	@Success		201		{object}	response.SuccessResponse{data=dto.CategoryResponse}
 //	@Failure		400		{object}	response.ErrorResponse
 //	@Failure		401		{object}	response.ErrorResponse
 //	@Failure		403		{object}	response.ErrorResponse
@@ -65,7 +65,7 @@ func (h *CategoryHandler) Create(c *gin.Context) {
 //	@Tags			Categories
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	response.SuccessResponse
+//	@Success		200	{object}	response.SuccessResponse{data=[]dto.CategoryResponse}
 //	@Failure		401	{object}	response.ErrorResponse
 //	@Router			/categories [get]
 func (h *CategoryHandler) GetAll(c *gin.Context) {
@@ -91,7 +91,7 @@ func (h *CategoryHandler) GetAll(c *gin.Context) {
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Param			id	path		int	true	"Category ID"
-//	@Success		200	{object}	response.SuccessResponse
+//	@Success		200	{object}	response.SuccessResponse{data=dto.CategoryResponse}
 //	@Failure		400	{object}	response.ErrorResponse
 //	@Failure		404	{object}	response.ErrorResponse
 //	@Router			/categories/{id} [get]
@@ -131,7 +131,7 @@ func (h *CategoryHandler) GetByID(c *gin.Context) {
 //	@Security		BearerAuth
 //	@Param			id		path		int					true	"Category ID"
 //	@Param			request	body		dto.UpdateCategoryRequest	true	"Category Request"
-//	@Success		200		{object}	response.SuccessResponse
+//	@Success		200		{object}	response.SuccessResponse{data=dto.CategoryResponse}
 //	@Failure		400		{object}	response.ErrorResponse
 //	@Failure		401		{object}	response.ErrorResponse
 //	@Failure		403		{object}	response.ErrorResponse

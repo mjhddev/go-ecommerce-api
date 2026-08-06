@@ -31,7 +31,7 @@ func NewCartHandler(cartService services.CartService) *CartHandler {
 //	@Produce		json
 //	@Security		BearerAuth
 //	@Param			request	body		dto.AddToCartRequest	true	"Cart Request"
-//	@Success		201		{object}	response.SuccessResponse
+//	@Success		201		{object}	response.SuccessResponse{data=dto.CartItemResponse}
 //	@Failure		400		{object}	response.ErrorResponse
 //	@Failure		401		{object}	response.ErrorResponse
 //	@Failure		404		{object}	response.ErrorResponse
@@ -80,7 +80,7 @@ func (h *CartHandler) AddToCart(c *gin.Context) {
 //	@Tags			Cart
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	response.SuccessResponse
+//	@Success		200	{object}	response.SuccessResponse{data=[]dto.CartItemResponse}
 //	@Failure		401	{object}	response.ErrorResponse
 //	@Router			/cart [get]
 func (h *CartHandler) GetCart(c *gin.Context) {
@@ -119,7 +119,7 @@ func (h *CartHandler) GetCart(c *gin.Context) {
 //	@Security		BearerAuth
 //	@Param			id		path		int					true	"Cart Item ID"
 //	@Param			request	body		dto.UpdateCartRequest	true	"Update Cart Request"
-//	@Success		200		{object}	response.SuccessResponse
+//	@Success		200		{object}	response.SuccessResponse{data=dto.CartItemResponse}
 //	@Failure		400		{object}	response.ErrorResponse
 //	@Failure		401		{object}	response.ErrorResponse
 //	@Failure		404		{object}	response.ErrorResponse
