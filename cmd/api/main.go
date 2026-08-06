@@ -20,9 +20,13 @@ import (
 // @in header
 // @name Authorization
 func main() {
+	log.Println("Loading environment...")
 	configs.LoadEnv()
+
+	log.Println("Connecting database...")
 	configs.ConnectDatabase()
 
+	log.Println("Setting up router...")
 	router := routes.SetupRouter()
 
 	port := os.Getenv("APP_PORT")
