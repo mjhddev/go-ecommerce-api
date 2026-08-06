@@ -28,8 +28,8 @@ A RESTful API for an e-commerce application built with Go, Gin, GORM, PostgreSQL
 - [x] Role-Based Authorization (Admin & User)
 - [x] Product Management
 - [x] Shopping Cart
-- [ ] Checkout
-- [ ] Swagger Documentation
+- [x] Checkout
+- [x] Swagger Documentation
 - [ ] Docker Support
 
 ## Run Project
