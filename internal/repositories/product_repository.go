@@ -9,7 +9,7 @@ import (
 
 type ProductRepository interface {
 	Create(product *models.Product) error
-	GetAll(page, limit int, search string) ([]models.Product, int64, error)
+	GetAll(page, limit int, search string, categoryID uint) ([]models.Product, int64, error)
 	GetByID(id uint) (*models.Product, error)
 	Update(product *models.Product) error
 	Delete(id uint) error
@@ -28,7 +28,7 @@ func (r *productRepository) Create(product *models.Product) error {
 	return r.db.Create(product).Error
 }
 
-func (r *productRepository) GetAll(page, limit int, search string) ([]models.Product, int64, error) {
+func (r *productRepository) GetAll(page, limit int, search string, categoryID uint) ([]models.Product, int64, error) {
 	var (
 		products []models.Product
 		total    int64
@@ -40,6 +40,10 @@ func (r *productRepository) GetAll(page, limit int, search string) ([]models.Pro
 
 	if search != "" {
 		query = query.Where("LOWER(name) LIKE LOWER(?)", "%"+search+"%")
+	}
+
+	if categoryID != 0 {
+		query = query.Where("category_id = ?", categoryID)
 	}
 
 	if err := query.Count(&total).Error; err != nil {

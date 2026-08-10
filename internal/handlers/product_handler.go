@@ -72,9 +72,10 @@ func (h *ProductHandler) Create(c *gin.Context) {
 //	@Tags			Products
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			page	query		int	false		"Page Number"	default(1)
-//	@Param			limit	query		int	false		"Items Per Page"	default(10)
-//	@Param 			search 	query 		string false 	"Search product by name"
+//	@Param 			page query 		int 	false "Page Number" default(1)
+//	@Param 			limit query 	int 	false "Items per Page" default(10)
+//	@Param 			search query 	string 	false "Search product by name"
+//	@Param 			category query 	int 	false "Filter by category ID"
 //	@Success		200		{object}	response.SuccessResponse{data=dto.ProductListResponse}
 //	@Failure		401		{object}	response.ErrorResponse
 //	@Failure		500		{object}	response.ErrorResponse
@@ -96,7 +97,10 @@ func (h *ProductHandler) GetAll(c *gin.Context) {
 
 	search := strings.TrimSpace(c.Query("search"))
 
-	products, err := h.productService.GetAll(page, limit, search)
+	categoryID64, _ := strconv.ParseUint(c.DefaultQuery("category", "0"), 10, 64)
+	categoryID := uint(categoryID64)
+
+	products, err := h.productService.GetAll(page, limit, search, categoryID)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return

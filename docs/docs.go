@@ -874,7 +874,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 10,
-                        "description": "Items Per Page",
+                        "description": "Items per Page",
                         "name": "limit",
                         "in": "query"
                     },
@@ -882,6 +882,12 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Search product by name",
                         "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter by category ID",
+                        "name": "category",
                         "in": "query"
                     }
                 ],

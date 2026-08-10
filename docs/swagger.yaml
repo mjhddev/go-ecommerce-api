@@ -756,7 +756,7 @@ paths:
         name: page
         type: integer
       - default: 10
-        description: Items Per Page
+        description: Items per Page
         in: query
         name: limit
         type: integer
@@ -764,6 +764,10 @@ paths:
         in: query
         name: search
         type: string
+      - description: Filter by category ID
+        in: query
+        name: category
+        type: integer
       produces:
       - application/json
       responses:
