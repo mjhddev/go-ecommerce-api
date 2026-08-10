@@ -64,18 +64,35 @@ func (h *ProductHandler) Create(c *gin.Context) {
 	)
 }
 
-// GetProducts godoc
+// GetAll godoc
 //
 //	@Summary		Get all products
-//	@Description	Get all products
+//	@Description	Get products with pagination
 //	@Tags			Products
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Success		200	{object}	response.SuccessResponse{data=[]dto.ProductResponse}
-//	@Failure		401	{object}	response.ErrorResponse
+//	@Param			page	query		int	false	"Page Number"	default(1)
+//	@Param			limit	query		int	false	"Items Per Page"	default(10)
+//	@Success		200		{object}	response.SuccessResponse{data=dto.ProductListResponse}
+//	@Failure		401		{object}	response.ErrorResponse
+//	@Failure		500		{object}	response.ErrorResponse
 //	@Router			/products [get]
 func (h *ProductHandler) GetAll(c *gin.Context) {
-	products, err := h.productService.GetAll()
+	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	if err != nil || limit < 1 {
+		limit = 10
+	}
+
+	if limit > 100 {
+		limit = 100
+	}
+
+	products, err := h.productService.GetAll(page, limit)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return

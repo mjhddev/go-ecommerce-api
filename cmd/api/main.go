@@ -37,4 +37,5 @@ func main() {
 	log.Printf("Server running on port %s", port)
 
 	router.Run(":" + port)
+
 }

@@ -1,6 +1,8 @@
 package services
 
 import (
+	"math"
+
 	"github.com/mjhddev/go-ecommerce-api/internal/dto"
 	"github.com/mjhddev/go-ecommerce-api/internal/errs"
 	"github.com/mjhddev/go-ecommerce-api/internal/models"
@@ -9,7 +11,7 @@ import (
 
 type ProductService interface {
 	Create(request dto.CreateProductRequest) (*dto.ProductResponse, error)
-	GetAll() ([]dto.ProductResponse, error)
+	GetAll(page, limit int) (*dto.ProductListResponse, error)
 	GetByID(id uint) (*dto.ProductResponse, error)
 	Update(id uint, request dto.UpdateProductRequest) (*dto.ProductResponse, error)
 	Delete(id uint) error
@@ -66,16 +68,16 @@ func (s *productService) Create(request dto.CreateProductRequest) (*dto.ProductR
 	return response, nil
 }
 
-func (s *productService) GetAll() ([]dto.ProductResponse, error) {
-	products, err := s.productRepo.GetAll()
+func (s *productService) GetAll(page, limit int) (*dto.ProductListResponse, error) {
+	products, total, err := s.productRepo.GetAll(page, limit)
 	if err != nil {
 		return nil, err
 	}
 
-	response := make([]dto.ProductResponse, 0, len(products))
+	items := make([]dto.ProductResponse, 0, len(products))
 
 	for _, product := range products {
-		response = append(response, dto.ProductResponse{
+		items = append(items, dto.ProductResponse{
 			ID:          product.ID,
 			Name:        product.Name,
 			Description: product.Description,
@@ -88,7 +90,17 @@ func (s *productService) GetAll() ([]dto.ProductResponse, error) {
 		})
 	}
 
-	return response, nil
+	totalPage := int(math.Ceil(float64(total) / float64(limit)))
+
+	return &dto.ProductListResponse{
+		Items: items,
+		Pagination: dto.PaginationResponse{
+			Page:      page,
+			Limit:     limit,
+			TotalData: total,
+			TotalPage: totalPage,
+		},
+	}, nil
 }
 
 func (s *productService) GetByID(id uint) (*dto.ProductResponse, error) {

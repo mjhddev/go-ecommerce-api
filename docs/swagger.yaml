@@ -114,6 +114,26 @@ definitions:
       total_amount:
         type: number
     type: object
+  dto.PaginationResponse:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+      total_data:
+        type: integer
+      total_page:
+        type: integer
+    type: object
+  dto.ProductListResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.ProductResponse'
+        type: array
+      pagination:
+        $ref: '#/definitions/dto.PaginationResponse'
+    type: object
   dto.ProductResponse:
     properties:
       category:
@@ -728,7 +748,18 @@ paths:
       - Orders
   /products:
     get:
-      description: Get all products
+      description: Get products with pagination
+      parameters:
+      - default: 1
+        description: Page Number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items Per Page
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
@@ -739,12 +770,14 @@ paths:
             - $ref: '#/definitions/response.SuccessResponse'
             - properties:
                 data:
-                  items:
-                    $ref: '#/definitions/dto.ProductResponse'
-                  type: array
+                  $ref: '#/definitions/dto.ProductListResponse'
               type: object
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
       security:

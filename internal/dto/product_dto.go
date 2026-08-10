@@ -24,3 +24,15 @@ type ProductResponse struct {
 	Stock       int              `json:"stock"`
 	Category    CategoryResponse `json:"category"`
 }
+
+type PaginationResponse struct {
+	Page      int   `json:"page"`
+	Limit     int   `json:"limit"`
+	TotalData int64 `json:"total_data"`
+	TotalPage int   `json:"total_page"`
+}
+
+type ProductListResponse struct {
+	Items      []ProductResponse  `json:"items"`
+	Pagination PaginationResponse `json:"pagination"`
+}

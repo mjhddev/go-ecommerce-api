@@ -9,7 +9,7 @@ import (
 
 type ProductRepository interface {
 	Create(product *models.Product) error
-	GetAll() ([]models.Product, error)
+	GetAll(page, limit int) ([]models.Product, int64, error)
 	GetByID(id uint) (*models.Product, error)
 	Update(product *models.Product) error
 	Delete(id uint) error
@@ -28,13 +28,28 @@ func (r *productRepository) Create(product *models.Product) error {
 	return r.db.Create(product).Error
 }
 
-func (r *productRepository) GetAll() ([]models.Product, error) {
-	var products []models.Product
-	err := r.db.Preload("Category").Find(&products).Error
-	if err != nil {
-		return nil, err
+func (r *productRepository) GetAll(page, limit int) ([]models.Product, int64, error) {
+	var (
+		products []models.Product
+		total    int64
+	)
+
+	offset := (page - 1) * limit
+
+	if err := r.db.Model(&models.Product{}).Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
-	return products, err
+
+	err := r.db.
+		Preload("Category").
+		Limit(limit).
+		Offset(offset).
+		Find(&products).Error
+
+	if err != nil {
+		return nil, 0, err
+	}
+	return products, total, err
 }
 
 func (r *productRepository) GetByID(id uint) (*models.Product, error) {
