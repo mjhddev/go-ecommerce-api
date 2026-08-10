@@ -11,7 +11,7 @@ import (
 
 type ProductService interface {
 	Create(request dto.CreateProductRequest) (*dto.ProductResponse, error)
-	GetAll(page, limit int) (*dto.ProductListResponse, error)
+	GetAll(page, limit int, search string) (*dto.ProductListResponse, error)
 	GetByID(id uint) (*dto.ProductResponse, error)
 	Update(id uint, request dto.UpdateProductRequest) (*dto.ProductResponse, error)
 	Delete(id uint) error
@@ -68,8 +68,8 @@ func (s *productService) Create(request dto.CreateProductRequest) (*dto.ProductR
 	return response, nil
 }
 
-func (s *productService) GetAll(page, limit int) (*dto.ProductListResponse, error) {
-	products, total, err := s.productRepo.GetAll(page, limit)
+func (s *productService) GetAll(page, limit int, search string) (*dto.ProductListResponse, error) {
+	products, total, err := s.productRepo.GetAll(page, limit, search)
 	if err != nil {
 		return nil, err
 	}

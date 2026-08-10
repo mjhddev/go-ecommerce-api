@@ -760,6 +760,10 @@ paths:
         in: query
         name: limit
         type: integer
+      - description: Search product by name
+        in: query
+        name: search
+        type: string
       produces:
       - application/json
       responses:

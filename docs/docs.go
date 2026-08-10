@@ -877,6 +877,12 @@ const docTemplate = `{
                         "description": "Items Per Page",
                         "name": "limit",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search product by name",
+                        "name": "search",
+                        "in": "query"
                     }
                 ],
                 "responses": {

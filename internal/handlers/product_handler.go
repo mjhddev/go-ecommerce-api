@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mjhddev/go-ecommerce-api/internal/dto"
@@ -71,8 +72,9 @@ func (h *ProductHandler) Create(c *gin.Context) {
 //	@Tags			Products
 //	@Produce		json
 //	@Security		BearerAuth
-//	@Param			page	query		int	false	"Page Number"	default(1)
-//	@Param			limit	query		int	false	"Items Per Page"	default(10)
+//	@Param			page	query		int	false		"Page Number"	default(1)
+//	@Param			limit	query		int	false		"Items Per Page"	default(10)
+//	@Param 			search 	query 		string false 	"Search product by name"
 //	@Success		200		{object}	response.SuccessResponse{data=dto.ProductListResponse}
 //	@Failure		401		{object}	response.ErrorResponse
 //	@Failure		500		{object}	response.ErrorResponse
@@ -92,7 +94,9 @@ func (h *ProductHandler) GetAll(c *gin.Context) {
 		limit = 100
 	}
 
-	products, err := h.productService.GetAll(page, limit)
+	search := strings.TrimSpace(c.Query("search"))
+
+	products, err := h.productService.GetAll(page, limit, search)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
