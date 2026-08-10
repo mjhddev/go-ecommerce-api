@@ -13,4 +13,6 @@ var (
 	ErrCartEmpty          = errors.New("cart is empty")
 	ErrInsufficientStock  = errors.New("insufficient stock")
 	ErrOrderNotFound      = errors.New("order not found")
+	ErrInvalidImage       = errors.New("invalid image format")
+	ErrImageTooLarge      = errors.New("image size exceeds 5 MB")
 )

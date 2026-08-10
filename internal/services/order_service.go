@@ -140,8 +140,9 @@ func (s *orderService) GetOrderByID(userID, orderID uint) (*dto.OrderDetailRespo
 
 		items = append(items, dto.OrderItemResponse{
 			Product: dto.OrderProductResponse{
-				ID:   item.Product.ID,
-				Name: item.Product.Name,
+				ID:       item.Product.ID,
+				Name:     item.Product.Name,
+				ImageURL: item.Product.ImageURL,
 			},
 			Quantity: item.Quantity,
 			Price:    item.Price,

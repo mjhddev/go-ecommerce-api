@@ -22,6 +22,7 @@ type ProductResponse struct {
 	Description string           `json:"description"`
 	Price       float64          `json:"price"`
 	Stock       int              `json:"stock"`
+	ImageURL    string           `json:"image_url"`
 	Category    CategoryResponse `json:"category"`
 }
 

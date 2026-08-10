@@ -21,6 +21,8 @@ func SetupRouter() *gin.Engine {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
+	router.Static("/uploads", "./uploads")
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Dependency Injection
@@ -85,6 +87,8 @@ func SetupRouter() *gin.Engine {
 		product.POST("", middleware.RoleMiddleware("admin"), productHandler.Create)
 		product.PUT("/:id", middleware.RoleMiddleware("admin"), productHandler.Update)
 		product.DELETE("/:id", middleware.RoleMiddleware("admin"), productHandler.Delete)
+		product.PUT("/:id/image", middleware.RoleMiddleware("admin"), productHandler.UploadImage)
+
 	}
 
 	cart := api.Group("/cart")

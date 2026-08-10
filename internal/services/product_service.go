@@ -2,11 +2,13 @@ package services
 
 import (
 	"math"
+	"mime/multipart"
 
 	"github.com/mjhddev/go-ecommerce-api/internal/dto"
 	"github.com/mjhddev/go-ecommerce-api/internal/errs"
 	"github.com/mjhddev/go-ecommerce-api/internal/models"
 	"github.com/mjhddev/go-ecommerce-api/internal/repositories"
+	"github.com/mjhddev/go-ecommerce-api/internal/storage"
 )
 
 type ProductService interface {
@@ -15,6 +17,8 @@ type ProductService interface {
 	GetByID(id uint) (*dto.ProductResponse, error)
 	Update(id uint, request dto.UpdateProductRequest) (*dto.ProductResponse, error)
 	Delete(id uint) error
+
+	UploadImage(id uint, file *multipart.FileHeader) (*dto.ProductResponse, error)
 }
 
 type productService struct {
@@ -59,6 +63,7 @@ func (s *productService) Create(request dto.CreateProductRequest) (*dto.ProductR
 		Description: product.Description,
 		Price:       product.Price,
 		Stock:       product.Stock,
+		ImageURL:    product.ImageURL,
 		Category: dto.CategoryResponse{
 			ID:   category.ID,
 			Name: category.Name,
@@ -83,6 +88,8 @@ func (s *productService) GetAll(query dto.ProductQuery) (*dto.ProductListRespons
 			Description: product.Description,
 			Price:       product.Price,
 			Stock:       product.Stock,
+			ImageURL:    product.ImageURL,
+
 			Category: dto.CategoryResponse{
 				ID:   product.Category.ID,
 				Name: product.Category.Name,
@@ -118,6 +125,8 @@ func (s *productService) GetByID(id uint) (*dto.ProductResponse, error) {
 		Description: product.Description,
 		Price:       product.Price,
 		Stock:       product.Stock,
+		ImageURL:    product.ImageURL,
+
 		Category: dto.CategoryResponse{
 			ID:   product.Category.ID,
 			Name: product.Category.Name,
@@ -160,6 +169,8 @@ func (s *productService) Update(id uint, request dto.UpdateProductRequest) (*dto
 		Description: product.Description,
 		Price:       product.Price,
 		Stock:       product.Stock,
+		ImageURL:    product.ImageURL,
+
 		Category: dto.CategoryResponse{
 			ID:   category.ID,
 			Name: category.Name,
@@ -179,4 +190,46 @@ func (s *productService) Delete(id uint) error {
 	}
 
 	return s.productRepo.Delete(id)
+}
+
+func (s *productService) UploadImage(id uint, file *multipart.FileHeader) (*dto.ProductResponse, error) {
+	product, err := s.productRepo.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if product == nil {
+		return nil, errs.ErrProductNotFound
+	}
+	oldImage := product.ImageURL
+
+	imageURL, err := storage.SaveProductImage(file)
+	if err != nil {
+		return nil, err
+	}
+
+	product.ImageURL = imageURL
+
+	if err := s.productRepo.Update(product); err != nil {
+		// Database gagal, hapus file yang baru diupload agar tidak menjadi orphan
+		_ = storage.DeleteFile(imageURL)
+		return nil, err
+	}
+	// Database berhasil, sekarang hapus gambar lama
+	if oldImage != "" {
+		_ = storage.DeleteFile(oldImage)
+	}
+
+	return &dto.ProductResponse{
+		ID:          product.ID,
+		Name:        product.Name,
+		Description: product.Description,
+		Price:       product.Price,
+		Stock:       product.Stock,
+		ImageURL:    product.ImageURL,
+		Category: dto.CategoryResponse{
+			ID:   product.Category.ID,
+			Name: product.Category.Name,
+		},
+	}, nil
 }

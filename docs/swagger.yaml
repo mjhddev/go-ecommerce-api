@@ -102,6 +102,8 @@ definitions:
     properties:
       id:
         type: integer
+      image_url:
+        type: string
       name:
         type: string
     type: object
@@ -142,6 +144,8 @@ definitions:
         type: string
       id:
         type: integer
+      image_url:
+        type: string
       name:
         type: string
       price:
@@ -768,6 +772,10 @@ paths:
         in: query
         name: category
         type: integer
+      - description: 'Sort: newest, oldest, price_asc, price_desc, name_asc, name_desc'
+        in: query
+        name: sort
+        type: string
       produces:
       - application/json
       responses:
@@ -954,6 +962,43 @@ paths:
       security:
       - BearerAuth: []
       summary: Update product
+      tags:
+      - Products
+  /products/{id}/image:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Upload image for a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product Image
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ProductResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Upload product image
       tags:
       - Products
   /profile:

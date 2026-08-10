@@ -19,8 +19,9 @@ type OrderItemResponse struct {
 }
 
 type OrderProductResponse struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name"`
+	ID       uint   `json:"id"`
+	Name     string `json:"name"`
+	ImageURL string `json:"image_url"`
 }
 
 type OrderDetailResponse struct {

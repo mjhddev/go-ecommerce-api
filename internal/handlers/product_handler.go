@@ -251,3 +251,43 @@ func (h *ProductHandler) Delete(c *gin.Context) {
 		nil,
 	)
 }
+
+// UploadImage godoc
+//
+//	@Summary		Upload product image
+//	@Description	Upload image for a product
+//	@Tags			Products
+//	@Accept			mpfd
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id		path		int	true	"Product ID"
+//	@Param			image	formData	file	true	"Product Image"
+//	@Success		200		{object}	response.SuccessResponse{data=dto.ProductResponse}
+//	@Failure		400		{object}	response.ErrorResponse
+//	@Router			/products/{id}/image [put]
+func (h *ProductHandler) UploadImage(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Invalid product ID")
+		return
+	}
+
+	file, err := c.FormFile("image")
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "Image is required")
+		return
+	}
+
+	product, err := h.productService.UploadImage(uint(id), file)
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	response.Success(
+		c,
+		http.StatusOK,
+		"Product image uploaded successfully",
+		product,
+	)
+}

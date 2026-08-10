@@ -61,6 +61,7 @@ func (s *cartService) AddToCart(userID uint, request dto.AddToCartRequest) (*dto
 				Description: product.Description,
 				Price:       product.Price,
 				Stock:       product.Stock,
+				ImageURL:    product.ImageURL,
 				Category: dto.CategoryResponse{
 					ID:   product.Category.ID,
 					Name: product.Category.Name,
@@ -89,6 +90,7 @@ func (s *cartService) AddToCart(userID uint, request dto.AddToCartRequest) (*dto
 			Description: product.Description,
 			Price:       product.Price,
 			Stock:       product.Stock,
+			ImageURL:    product.ImageURL,
 			Category: dto.CategoryResponse{
 				ID:   product.Category.ID,
 				Name: product.Category.Name,
@@ -114,6 +116,8 @@ func (s *cartService) GetCart(userID uint) ([]dto.CartItemResponse, error) {
 				Description: item.Product.Description,
 				Price:       item.Product.Price,
 				Stock:       item.Product.Stock,
+				ImageURL:    item.Product.ImageURL,
+
 				Category: dto.CategoryResponse{
 					ID:   item.Product.Category.ID,
 					Name: item.Product.Category.Name,
@@ -152,6 +156,8 @@ func (s *cartService) Update(userID, cartID uint, request dto.UpdateCartRequest)
 			Description: cartItem.Product.Description,
 			Price:       cartItem.Product.Price,
 			Stock:       cartItem.Product.Stock,
+			ImageURL:    cartItem.Product.ImageURL,
+
 			Category: dto.CategoryResponse{
 				ID:   cartItem.Product.Category.ID,
 				Name: cartItem.Product.Category.Name,
