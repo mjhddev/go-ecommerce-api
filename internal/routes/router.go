@@ -49,8 +49,11 @@ func SetupRouter() *gin.Engine {
 		cartRepository,
 		productRepository,
 	)
-
 	orderHandler := handlers.NewOrderHandler(orderService)
+
+	dashboardRepository := repositories.NewDashboardRepository(configs.DB)
+	dashboardService := services.NewDashboardService(dashboardRepository)
+	dashboardHandler := handlers.NewDashboardHandler(dashboardService)
 
 	// Routes
 	api := router.Group("/api/v1")
@@ -114,6 +117,7 @@ func SetupRouter() *gin.Engine {
 		admin.GET("/orders", middleware.RoleMiddleware("admin"), orderHandler.GetAllAdminOrders)
 		admin.GET("/orders/:id", middleware.RoleMiddleware("admin"), orderHandler.GetAdminOrderByID)
 		admin.PUT("/orders/:id/status", middleware.RoleMiddleware("admin"), orderHandler.UpdateOrderStatus)
+		admin.GET("/dashboard", middleware.RoleMiddleware("admin"), dashboardHandler.GetDashboard)
 	}
 
 	router.GET("/health", func(c *gin.Context) {

@@ -95,6 +95,25 @@ definitions:
     - price
     - stock
     type: object
+  dto.DashboardResponse:
+    properties:
+      completed_orders:
+        type: integer
+      monthly_revenue:
+        items:
+          $ref: '#/definitions/dto.MonthlyRevenueResponse'
+        type: array
+      pending_orders:
+        type: integer
+      top_products:
+        items:
+          $ref: '#/definitions/dto.TopProductResponse'
+        type: array
+      total_orders:
+        type: integer
+      total_revenue:
+        type: number
+    type: object
   dto.LoginRequest:
     properties:
       email:
@@ -109,6 +128,13 @@ definitions:
     properties:
       access_token:
         type: string
+    type: object
+  dto.MonthlyRevenueResponse:
+    properties:
+      month:
+        type: string
+      revenue:
+        type: number
     type: object
   dto.OrderDetailResponse:
     properties:
@@ -225,6 +251,17 @@ definitions:
       role:
         type: string
     type: object
+  dto.TopProductResponse:
+    properties:
+      id:
+        type: integer
+      image_url:
+        type: string
+      name:
+        type: string
+      sold:
+        type: integer
+    type: object
   dto.UpdateCartRequest:
     properties:
       quantity:
@@ -292,6 +329,38 @@ info:
   title: Go E-Commerce API
   version: "1.0"
 paths:
+  /admin/dashboard:
+    get:
+      description: Get dashboard analytics for admin
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.DashboardResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get dashboard analytics
+      tags:
+      - Admin Dashboard
   /admin/orders:
     get:
       description: Get all orders for admin
