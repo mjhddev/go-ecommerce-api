@@ -3,13 +3,14 @@ package repositories
 import (
 	"errors"
 
+	"github.com/mjhddev/go-ecommerce-api/internal/dto"
 	"github.com/mjhddev/go-ecommerce-api/internal/models"
 	"gorm.io/gorm"
 )
 
 type ProductRepository interface {
 	Create(product *models.Product) error
-	GetAll(page, limit int, search string, categoryID uint, sort string) ([]models.Product, int64, error)
+	GetAll(query dto.ProductQuery) ([]models.Product, int64, error)
 	GetByID(id uint) (*models.Product, error)
 	Update(product *models.Product) error
 	Delete(id uint) error
@@ -28,48 +29,48 @@ func (r *productRepository) Create(product *models.Product) error {
 	return r.db.Create(product).Error
 }
 
-func (r *productRepository) GetAll(page, limit int, search string, categoryID uint, sort string) ([]models.Product, int64, error) {
+func (r *productRepository) GetAll(query dto.ProductQuery) ([]models.Product, int64, error) {
 	var (
 		products []models.Product
 		total    int64
 	)
 
-	offset := (page - 1) * limit
+	offset := (query.Page - 1) * query.Limit
 
-	query := r.db.Model(&models.Product{})
+	db := r.db.Model(&models.Product{})
 
-	if search != "" {
-		query = query.Where("LOWER(name) LIKE LOWER(?)", "%"+search+"%")
+	if query.Search != "" {
+		db = db.Where("LOWER(name) LIKE LOWER(?)", "%"+query.Search+"%")
 	}
 
-	if categoryID != 0 {
-		query = query.Where("category_id = ?", categoryID)
+	if query.CategoryID != 0 {
+		db = db.Where("category_id = ?", query.CategoryID)
 	}
 
-	switch sort {
+	switch query.Sort {
 	case "price_asc":
-		query = query.Order("price ASC")
+		db = db.Order("price ASC")
 	case "price_desc":
-		query = query.Order("price DESC")
+		db = db.Order("price DESC")
 	case "name_asc":
-		query = query.Order("name ASC")
+		db = db.Order("name ASC")
 	case "name_desc":
-		query = query.Order("name DESC")
+		db = db.Order("name DESC")
 	case "newest":
-		query = query.Order("created_at DESC")
+		db = db.Order("created_at DESC")
 	case "oldest":
-		query = query.Order("created_at ASC")
+		db = db.Order("created_at ASC")
 	default:
-		query = query.Order("id DESC")
+		db = db.Order("id DESC")
 	}
 
-	if err := query.Count(&total).Error; err != nil {
+	if err := db.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
-	err := query.
+	err := db.
 		Preload("Category").
-		Limit(limit).
+		Limit(query.Limit).
 		Offset(offset).
 		Find(&products).Error
 

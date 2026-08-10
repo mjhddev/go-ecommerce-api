@@ -11,7 +11,7 @@ import (
 
 type ProductService interface {
 	Create(request dto.CreateProductRequest) (*dto.ProductResponse, error)
-	GetAll(page, limit int, search string, categoryID uint, sort string) (*dto.ProductListResponse, error)
+	GetAll(query dto.ProductQuery) (*dto.ProductListResponse, error)
 	GetByID(id uint) (*dto.ProductResponse, error)
 	Update(id uint, request dto.UpdateProductRequest) (*dto.ProductResponse, error)
 	Delete(id uint) error
@@ -68,14 +68,8 @@ func (s *productService) Create(request dto.CreateProductRequest) (*dto.ProductR
 	return response, nil
 }
 
-func (s *productService) GetAll(page, limit int, search string, categoryID uint, sort string) (*dto.ProductListResponse, error) {
-	products, total, err := s.productRepo.GetAll(
-		page,
-		limit,
-		search,
-		categoryID,
-		sort,
-	)
+func (s *productService) GetAll(query dto.ProductQuery) (*dto.ProductListResponse, error) {
+	products, total, err := s.productRepo.GetAll(query)
 	if err != nil {
 		return nil, err
 	}
@@ -96,13 +90,13 @@ func (s *productService) GetAll(page, limit int, search string, categoryID uint,
 		})
 	}
 
-	totalPage := int(math.Ceil(float64(total) / float64(limit)))
+	totalPage := int(math.Ceil(float64(total) / float64(query.Limit)))
 
 	return &dto.ProductListResponse{
 		Items: items,
 		Pagination: dto.PaginationResponse{
-			Page:      page,
-			Limit:     limit,
+			Page:      query.Page,
+			Limit:     query.Limit,
 			TotalData: total,
 			TotalPage: totalPage,
 		},

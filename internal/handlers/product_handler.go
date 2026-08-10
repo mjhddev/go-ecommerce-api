@@ -96,14 +96,16 @@ func (h *ProductHandler) GetAll(c *gin.Context) {
 		limit = 100
 	}
 
-	search := strings.TrimSpace(c.Query("search"))
-
 	categoryID64, _ := strconv.ParseUint(c.DefaultQuery("category", "0"), 10, 64)
-	categoryID := uint(categoryID64)
+	query := dto.ProductQuery{
+		Page:       page,
+		Limit:      limit,
+		Search:     strings.TrimSpace(c.Query("search")),
+		CategoryID: uint(categoryID64),
+		Sort:       c.DefaultQuery("sort", "newest"),
+	}
 
-	sort := c.DefaultQuery("sort", "newest")
-
-	products, err := h.productService.GetAll(page, limit, search, categoryID, sort)
+	products, err := h.productService.GetAll(query)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
