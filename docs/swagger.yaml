@@ -10,6 +10,40 @@ definitions:
     - product_id
     - quantity
     type: object
+  dto.AdminOrderDetailResponse:
+    properties:
+      created_at:
+        type: string
+      customer:
+        type: string
+      customer_id:
+        type: integer
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/dto.OrderItemResponse'
+        type: array
+      status:
+        type: string
+      total_amount:
+        type: number
+    type: object
+  dto.AdminOrderResponse:
+    properties:
+      created_at:
+        type: string
+      customer:
+        type: string
+      customer_id:
+        type: integer
+      id:
+        type: integer
+      status:
+        type: string
+      total_amount:
+        type: number
+    type: object
   dto.CartItemResponse:
     properties:
       id:
@@ -206,6 +240,13 @@ definitions:
     required:
     - name
     type: object
+  dto.UpdateOrderStatusRequest:
+    properties:
+      status:
+        type: string
+    required:
+    - status
+    type: object
   dto.UpdateProductRequest:
     properties:
       category_id:
@@ -251,6 +292,133 @@ info:
   title: Go E-Commerce API
   version: "1.0"
 paths:
+  /admin/orders:
+    get:
+      description: Get all orders for admin
+      parameters:
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Customer name
+        in: query
+        name: search
+        type: string
+      - description: Order status
+        in: query
+        name: status
+        type: string
+      - description: newest or oldest
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dto.AdminOrderResponse'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: Get all orders
+      tags:
+      - Admin Orders
+  /admin/orders/{id}:
+    get:
+      description: Get order detail by id
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AdminOrderDetailResponse'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get order detail
+      tags:
+      - Admin Orders
+  /admin/orders/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Update order status by admin
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateOrderStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AdminOrderDetailResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update order status
+      tags:
+      - Admin Orders
   /auth/login:
     post:
       consumes:

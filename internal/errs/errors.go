@@ -15,4 +15,5 @@ var (
 	ErrOrderNotFound      = errors.New("order not found")
 	ErrInvalidImage       = errors.New("invalid image format")
 	ErrImageTooLarge      = errors.New("image size exceeds 5 MB")
+	ErrInvalidOrderStatus = errors.New("invalid order status transition")
 )

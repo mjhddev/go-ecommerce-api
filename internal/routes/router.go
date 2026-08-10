@@ -108,6 +108,14 @@ func SetupRouter() *gin.Engine {
 		order.POST("/checkout", orderHandler.Checkout)
 	}
 
+	admin := api.Group("/admin")
+	admin.Use(middleware.AuthMiddleware())
+	{
+		admin.GET("/orders", middleware.RoleMiddleware("admin"), orderHandler.GetAllAdminOrders)
+		admin.GET("/orders/:id", middleware.RoleMiddleware("admin"), orderHandler.GetAdminOrderByID)
+		admin.PUT("/orders/:id/status", middleware.RoleMiddleware("admin"), orderHandler.UpdateOrderStatus)
+	}
+
 	router.GET("/health", func(c *gin.Context) {
 		response.Success(
 			c,
