@@ -76,6 +76,7 @@ func (h *ProductHandler) Create(c *gin.Context) {
 //	@Param 			limit query 	int 	false "Items per Page" default(10)
 //	@Param 			search query 	string 	false "Search product by name"
 //	@Param 			category query 	int 	false "Filter by category ID"
+//	@Param 			sort query string false "Sort: newest, oldest, price_asc, price_desc, name_asc, name_desc"
 //	@Success		200		{object}	response.SuccessResponse{data=dto.ProductListResponse}
 //	@Failure		401		{object}	response.ErrorResponse
 //	@Failure		500		{object}	response.ErrorResponse
@@ -100,7 +101,9 @@ func (h *ProductHandler) GetAll(c *gin.Context) {
 	categoryID64, _ := strconv.ParseUint(c.DefaultQuery("category", "0"), 10, 64)
 	categoryID := uint(categoryID64)
 
-	products, err := h.productService.GetAll(page, limit, search, categoryID)
+	sort := c.DefaultQuery("sort", "newest")
+
+	products, err := h.productService.GetAll(page, limit, search, categoryID, sort)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return

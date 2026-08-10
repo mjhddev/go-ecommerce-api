@@ -15,6 +15,6 @@ type Product struct {
 	CartItems  []CartItem  `gorm:"foreignKey:ProductID" json:"cart_items,omitempty"`
 	OrderItems []OrderItem `gorm:"foreignKey:ProductID" json:"order_items,omitempty"`
 
-	CreateAt time.Time `json:"create_at"`
-	UpdateAt time.Time `json:"update_at"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

@@ -9,7 +9,7 @@ import (
 
 type ProductRepository interface {
 	Create(product *models.Product) error
-	GetAll(page, limit int, search string, categoryID uint) ([]models.Product, int64, error)
+	GetAll(page, limit int, search string, categoryID uint, sort string) ([]models.Product, int64, error)
 	GetByID(id uint) (*models.Product, error)
 	Update(product *models.Product) error
 	Delete(id uint) error
@@ -28,7 +28,7 @@ func (r *productRepository) Create(product *models.Product) error {
 	return r.db.Create(product).Error
 }
 
-func (r *productRepository) GetAll(page, limit int, search string, categoryID uint) ([]models.Product, int64, error) {
+func (r *productRepository) GetAll(page, limit int, search string, categoryID uint, sort string) ([]models.Product, int64, error) {
 	var (
 		products []models.Product
 		total    int64
@@ -44,6 +44,23 @@ func (r *productRepository) GetAll(page, limit int, search string, categoryID ui
 
 	if categoryID != 0 {
 		query = query.Where("category_id = ?", categoryID)
+	}
+
+	switch sort {
+	case "price_asc":
+		query = query.Order("price ASC")
+	case "price_desc":
+		query = query.Order("price DESC")
+	case "name_asc":
+		query = query.Order("name ASC")
+	case "name_desc":
+		query = query.Order("name DESC")
+	case "newest":
+		query = query.Order("created_at DESC")
+	case "oldest":
+		query = query.Order("created_at ASC")
+	default:
+		query = query.Order("id DESC")
 	}
 
 	if err := query.Count(&total).Error; err != nil {
