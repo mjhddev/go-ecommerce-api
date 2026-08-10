@@ -23,6 +23,15 @@ func SetupRouter() *gin.Engine {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	router.Static("/assets", "./web/assets")
+	router.StaticFile("/", "./web/login.html")
+
+	router.StaticFile("/dashboard", "./web/dashboard.html")
+	router.StaticFile("/categories", "./web/categories.html")
+	router.StaticFile("/products", "./web/products.html")
+	router.StaticFile("/cart", "./web/cart.html")
+	router.StaticFile("/orders", "./web/orders.html")
+
 	// Dependency Injection
 	userRepository := repositories.NewUserRepository(configs.DB)
 	userService := services.NewUserService(userRepository)
