@@ -1,7 +1,6 @@
 package services
 
 import (
-	"github.com/mjhddev/go-ecommerce-api/internal/cache"
 	"github.com/mjhddev/go-ecommerce-api/internal/dto"
 	"github.com/mjhddev/go-ecommerce-api/internal/errs"
 	"github.com/mjhddev/go-ecommerce-api/internal/models"
@@ -128,8 +127,6 @@ func (s *orderService) Checkout(userID uint) (*dto.CheckoutResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	_ = cache.Delete(cache.DashboardKey())
 
 	return &dto.CheckoutResponse{
 		OrderID:     order.ID,
@@ -291,8 +288,6 @@ func (s *orderService) UpdateOrderStatus(
 			Price:    item.Price,
 		})
 	}
-
-	_ = cache.Delete(cache.DashboardKey())
 
 	return &dto.AdminOrderDetailResponse{
 		ID:          order.ID,

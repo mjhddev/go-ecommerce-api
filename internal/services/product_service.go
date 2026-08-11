@@ -4,7 +4,6 @@ import (
 	"math"
 	"mime/multipart"
 
-	"github.com/mjhddev/go-ecommerce-api/internal/cache"
 	"github.com/mjhddev/go-ecommerce-api/internal/dto"
 	"github.com/mjhddev/go-ecommerce-api/internal/errs"
 	"github.com/mjhddev/go-ecommerce-api/internal/models"
@@ -58,8 +57,6 @@ func (s *productService) Create(request dto.CreateProductRequest) (*dto.ProductR
 		return nil, err
 	}
 
-	_ = cache.DeleteByPattern("products:*")
-
 	response := &dto.ProductResponse{
 		ID:          product.ID,
 		Name:        product.Name,
@@ -77,25 +74,6 @@ func (s *productService) Create(request dto.CreateProductRequest) (*dto.ProductR
 }
 
 func (s *productService) GetAll(query dto.ProductQuery) (*dto.ProductListResponse, error) {
-
-	cacheKey := cache.ProductListKey(
-		query.Page,
-		query.Limit,
-		query.Search,
-		query.CategoryID,
-		query.Sort,
-	)
-
-	var cached dto.ProductListResponse
-
-	found, err := cache.Get(cacheKey, &cached)
-	if err != nil {
-		return nil, err
-	}
-
-	if found {
-		return &cached, nil
-	}
 
 	products, total, err := s.productRepo.GetAll(query)
 	if err != nil {
@@ -132,28 +110,10 @@ func (s *productService) GetAll(query dto.ProductQuery) (*dto.ProductListRespons
 		},
 	}
 
-	_ = cache.Set(
-		cacheKey,
-		response,
-		cache.ProductTTL,
-	)
-
 	return response, nil
 }
 
 func (s *productService) GetByID(id uint) (*dto.ProductResponse, error) {
-	cacheKey := cache.ProductKey(id)
-
-	var cached dto.ProductResponse
-
-	found, err := cache.Get(cacheKey, &cached)
-	if err != nil {
-		return nil, err
-	}
-
-	if found {
-		return &cached, nil
-	}
 
 	product, err := s.productRepo.GetByID(id)
 	if err != nil {
@@ -176,12 +136,6 @@ func (s *productService) GetByID(id uint) (*dto.ProductResponse, error) {
 			Name: product.Category.Name,
 		},
 	}
-
-	_ = cache.Set(
-		cacheKey,
-		response,
-		cache.ProductTTL,
-	)
 
 	return response, nil
 }
@@ -213,9 +167,6 @@ func (s *productService) Update(id uint, request dto.UpdateProductRequest) (*dto
 		return nil, err
 	}
 
-	_ = cache.Delete(cache.ProductKey(product.ID))
-	_ = cache.DeleteByPattern("products:*")
-
 	response := &dto.ProductResponse{
 		ID:          product.ID,
 		Name:        product.Name,
@@ -241,9 +192,6 @@ func (s *productService) Delete(id uint) error {
 	if product == nil {
 		return errs.ErrProductNotFound
 	}
-
-	_ = cache.Delete(cache.ProductKey(product.ID))
-	_ = cache.DeleteByPattern("products:*")
 
 	return s.productRepo.Delete(id)
 }
@@ -275,9 +223,6 @@ func (s *productService) UploadImage(id uint, file *multipart.FileHeader) (*dto.
 	if oldImage != "" {
 		_ = storage.DeleteFile(oldImage)
 	}
-
-	_ = cache.Delete(cache.ProductKey(product.ID))
-	_ = cache.DeleteByPattern("products:*")
 
 	return &dto.ProductResponse{
 		ID:          product.ID,

@@ -1,7 +1,6 @@
 package services
 
 import (
-	"github.com/mjhddev/go-ecommerce-api/internal/cache"
 	"github.com/mjhddev/go-ecommerce-api/internal/dto"
 	"github.com/mjhddev/go-ecommerce-api/internal/repositories"
 )
@@ -23,19 +22,6 @@ func NewDashboardService(
 }
 
 func (s *dashboardService) GetDashboard() (*dto.DashboardResponse, error) {
-
-	cacheKey := cache.DashboardKey()
-
-	var cached dto.DashboardResponse
-
-	found, err := cache.Get(cacheKey, &cached)
-	if err != nil {
-		return nil, err
-	}
-
-	if found {
-		return &cached, nil
-	}
 
 	totalOrders, err := s.dashboardRepo.GetTotalOrders()
 	if err != nil {
@@ -75,12 +61,6 @@ func (s *dashboardService) GetDashboard() (*dto.DashboardResponse, error) {
 		MonthlyRevenue:  monthlyRevenue,
 		TopProducts:     topProducts,
 	}
-
-	_ = cache.Set(
-		cacheKey,
-		response,
-		cache.DashboardTTL,
-	)
 
 	return response, nil
 }
