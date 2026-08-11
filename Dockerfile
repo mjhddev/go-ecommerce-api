@@ -16,7 +16,7 @@ FROM alpine:3.22
 
 WORKDIR /app
 
-RUN apk add --no-cache ca-certificates wget
+RUN apk add --no-cache ca-certificates curl
 
 COPY --from=builder /app/ecommerce-api /app/ecommerce-api
 COPY --from=builder /app/ecommerce-seed /app/ecommerce-seed
