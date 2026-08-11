@@ -76,6 +76,16 @@ Open Swagger UI.
 http://localhost:8080/swagger/index.html
 ```
 
+## Preview
+
+### Swagger Documentation
+
+![Swagger](docs/images/swagger.png)
+
+### Docker Containers
+
+![Docker](docs/images/docker.png)
+
 ## Future Improvements
 
 - Redis Caching
