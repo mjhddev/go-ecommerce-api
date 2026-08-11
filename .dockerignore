@@ -1,11 +1,18 @@
 .git
 .gitignore
 
+.vscode
+.idea
 
 tmp
+bin
+
+
+uploads/
 
 *.exe
 *.out
+*.log
 
 .env
 
