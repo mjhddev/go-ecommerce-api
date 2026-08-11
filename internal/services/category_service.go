@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/mjhddev/go-ecommerce-api/internal/cache"
 	"github.com/mjhddev/go-ecommerce-api/internal/dto"
 	"github.com/mjhddev/go-ecommerce-api/internal/errs"
 	"github.com/mjhddev/go-ecommerce-api/internal/models"
@@ -40,10 +41,26 @@ func (s *categoryService) Create(request dto.CreateCategoryRequest) (*dto.Catego
 		Name: category.Name,
 	}
 
+	_ = cache.Delete(cache.CategoryKey())
+
 	return response, nil
 }
 
 func (s *categoryService) GetAll() ([]dto.CategoryResponse, error) {
+
+	cacheKey := cache.CategoryKey()
+
+	var cached []dto.CategoryResponse
+
+	found, err := cache.Get(cacheKey, &cached)
+	if err != nil {
+		return nil, err
+	}
+
+	if found {
+		return cached, nil
+	}
+
 	categories, err := s.repo.GetAll()
 	if err != nil {
 		return nil, err
@@ -56,6 +73,12 @@ func (s *categoryService) GetAll() ([]dto.CategoryResponse, error) {
 			Name: category.Name,
 		})
 	}
+
+	_ = cache.Set(
+		cacheKey,
+		response,
+		cache.CategoryTTL,
+	)
 
 	return response, nil
 }
@@ -100,6 +123,8 @@ func (s *categoryService) Update(id uint, request dto.UpdateCategoryRequest) (*d
 		Name: category.Name,
 	}
 
+	_ = cache.Delete(cache.CategoryKey())
+
 	return response, nil
 }
 
@@ -112,6 +137,8 @@ func (s *categoryService) Delete(id uint) error {
 	if category == nil {
 		return errs.ErrCategoryNotFound
 	}
+
+	_ = cache.Delete(cache.CategoryKey())
 
 	return s.repo.Delete(id)
 }

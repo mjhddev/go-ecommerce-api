@@ -25,6 +25,7 @@ func main() {
 
 	log.Println("Connecting database...")
 	configs.ConnectDatabase()
+	configs.ConnectRedis()
 
 	log.Println("Setting up router...")
 	router := routes.SetupRouter()
